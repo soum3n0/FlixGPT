@@ -1,24 +1,25 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import VideoTitle from './VideoTitle';
 import VideoBackground from './VideoBackground';
 import { useSelector } from 'react-redux';
+import LoadingPage from './LoadingPage';
 
 const MainContainer = () => {
     const movies = useSelector(store => store.movies?.nowPlayingMovies);
-    // Early return
-    if (!movies) return;
 
-    // const min = 0;
-    // const max = movies.length;
-    // const randomIndex = Math.floor(Math.random() * (max - min + 1)) + min;
-
-    const mainMovie = movies[1];
-    if (!mainMovie) return;
+    const mainMovie = useMemo(() => {
+        if (!movies || movies.length === 0) return <LoadingPage/>;
+        const index = Math.floor(Math.random() * movies.length);
+        return movies[index];
+    }, [movies]);
+    
+ 
+    if (!mainMovie) return <LoadingPage/>;
     const { id, original_title, overview } = mainMovie;
 
     return (
         <div>
-            <VideoTitle title={original_title} description={overview} />
+            <VideoTitle title={original_title} description={overview} id={id}/>
             <VideoBackground id={id} />
         </div>
     )

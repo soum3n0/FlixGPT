@@ -1,23 +1,32 @@
-import React from 'react';
-import useNowPlayingMovies from '../Hooks/useNowPlayingMovies';
-import MainContainer from './MainContainer';
-import SecondaryContainer from './SecondaryContainer';
-import { useSelector } from 'react-redux';
-import GptPage from './GptPage';
+import React from "react";
+import useNowPlayingMovies from "../Hooks/useNowPlayingMovies";
+import usePopularMovies from "../Hooks/usePopularMovies";
+import useTopRatedMovies from "../Hooks/useTopRatedMovies";
+import useUpcomingMovies from "../Hooks/useUpcomingMovies";
+import MainContainer from "./MainContainer";
+import SecondaryContainer from "./SecondaryContainer";
+import Error from "./Error";
 
 const Browse = () => {
-    useNowPlayingMovies();
-    const gptPageStatus = useSelector(store => store.gpt.gptPage);
+    const { hasNowPlayingError } = useNowPlayingMovies();
+    const { hasPopularError } = usePopularMovies();
+    const { hasTopRatedError } = useTopRatedMovies();
+    const { hasUpcomingError } = useUpcomingMovies();
 
-    return (
+    const hasError =
+        hasNowPlayingError ||
+        hasPopularError ||
+        hasTopRatedError ||
+        hasUpcomingError;
+
+    return hasError ? (
+        <Error />
+    ) : (
         <div>
-            {gptPageStatus ? <GptPage /> :
-                <>
-                    <MainContainer />
-                    <SecondaryContainer />
-                </>}
+            <MainContainer />
+            <SecondaryContainer />
         </div>
-    )
-}
+    );
+};
 
 export default Browse;
