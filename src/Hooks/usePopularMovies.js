@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react"
 import { API_OPTION, POPULAR_MOVIE_API } from "../utils/constrants";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addPopularMovies } from "../utils/moviesSlice";
 
 const usePopularMovies = ()=>{
     const dispatch = useDispatch();
     const [hasPopularError, setHasPopularError] = useState(false);
+    const movies = useSelector((store) => store.movies.popularMovies);
+    
     useEffect(()=>{
+        if (movies?.length > 0) return;
         getMovies();
     },[]);
 

@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { API_OPTION, NOW_PLAYING_MOVIE_API } from "../utils/constrants";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addNowPlayingMovies } from "../utils/moviesSlice";
 
 const useNowPlayingMovies = () => {
     const dispatch = useDispatch();
     const [hasNowPlayingError, setHasNowPlayingError] = useState(false);
+    const movies = useSelector((store) => store.movies.nowPlayingMovies);
 
     const getNowPlayingMovies = async () => {
         try {
@@ -21,6 +22,7 @@ const useNowPlayingMovies = () => {
     };
 
     useEffect(() => {
+        if (movies?.length > 0) return;
         getNowPlayingMovies();
     }, []);
     return { hasNowPlayingError };

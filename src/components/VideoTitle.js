@@ -33,7 +33,7 @@ const VideoTitle = ({ title, description, id }) => {
             </div>
             {trailerPage && <div>
                 {loading && <LoadingPage/>}
-                <iframe className='fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2/3 h-3/4'
+                <iframe title={title} className='fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2/3 h-3/4'
                     src={`https://www.youtube.com/embed/${trailerDetails?.key}?autoplay=1&mute=1`}
                     frameBorder="0" allow="autoplay; encrypted-media" allowFullScreen onLoad={handleIframeLoad}>
                 </iframe>
@@ -43,4 +43,4 @@ const VideoTitle = ({ title, description, id }) => {
     )
 }
 
-export default VideoTitle;
+export default React.memo(VideoTitle);

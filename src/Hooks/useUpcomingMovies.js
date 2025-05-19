@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { API_OPTION, UPCOMING_MOVIE_API } from "../utils/constrants";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addUpcomingMovies } from "../utils/moviesSlice";
 
 const useUpcomingMovies = () => {
     const dispatch = useDispatch();
     const [hasUpcomingError, setHasUpcomingError] = useState(false);
+    const movies = useSelector((store) => store.movies.upcomingMovies);
     useEffect(() => {
+        if (movies?.length > 0) return;
         getMovies();
     }, []);
 

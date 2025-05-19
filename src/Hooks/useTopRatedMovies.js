@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react"
 import { API_OPTION, TOP_RATED_MOVIE_API } from "../utils/constrants";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addTopRatedMovies } from "../utils/moviesSlice";
 
 const useTopRatedMovies = ()=>{
     const dispatch = useDispatch();
     const [hasTopRatedError, setHasTopRatedError] = useState(false);
+    const movies = useSelector((store) => store.movies.topRatedMovies);
     useEffect(()=>{
+        if (movies?.length > 0) return;
         getMovies();
     }, []);
 

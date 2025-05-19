@@ -106,7 +106,7 @@ const MovieInfo = () => {
                 {loading && <LoadingPage />}
                 <iframe className='fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2/3 h-3/4'
                     src={"https://www.youtube.com/embed/" + trailerDetails?.key + "?autoplay=1&mute=1"}
-                    frameBorder="0" allow="autoplay; encrypted-media" allowFullScreen onLoad={handleIframeLoad}>
+                    frameBorder="0" title={original_title} allow="autoplay; encrypted-media" allowFullScreen onLoad={handleIframeLoad}>
                 </iframe>
                 <button onClick={() => setTrailerPage(false)} className="fixed z-10 text-lg rounded-full p-1 px-3 bg-gray-500 text-white top-16 right-48"><i className="fa-solid fa-xmark"></i></button>
             </div>}

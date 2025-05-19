@@ -8,53 +8,61 @@ import MovieList from "./MovieList";
 import LoadingPage from "./LoadingPage";
 
 const AiPage = () => {
-    const langKey = useSelector((store) => store.config.lang);
+    const langKey = useSelector((store) => store.userConfig.config.lang);
     const { searchResult, gptMovies } = useSelector((store) => store.gpt);
-    const searchText = useRef(null);
     const dispatch = useDispatch();
+
+    const searchText = useRef(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState("");
 
     const getMovieFromTMDB = async (movie) => {
         try {
-            const data = await fetch(GET_MOVIE_BY_NAME_API + movie, API_OPTION);
-            const json = await data.json();
-            return json.results;
+            const response = await fetch(GET_MOVIE_BY_NAME_API + movie, API_OPTION);
+            const json = await response.json();
+            return json.results || [];
         } catch (err) {
-            console.error("Server not responding");
-            setIsLoading(false);
+            console.error("TMDB API error:", err);
+            return [];
         }
     };
 
     const handleGeminiSearchClick = async () => {
+        const query = searchText.current.value.trim();
+        if (!query) {
+            setError("Please enter a search term.");
+            return;
+        }
+
         setIsLoading(true);
-        const prompt =
-            "Act as a  Movie Recommendation system and suggest some movies for the query " +
-            searchText.current.value +
-            ". Only give me name of 3 movies, comma seperated like the example result given ahead. Example result : Movie Name 1, Movie Name 2, Move Name 3";
+        setError("");
 
-        const result = await gemini.generateContent(prompt);
-        const response = await result.response;
-        const text = response.text();
-        setIsLoading(false);
+        try {
+            const prompt = `Act as a Movie Recommendation system and suggest some movies for the query: "${query}". Only give me name of 3 movies, comma separated. Example: Movie 1, Movie 2, Movie 3`;
 
-        const movieNameArray = text.split(", ");
-        const promiseArray = movieNameArray.map((movie) =>
-            getMovieFromTMDB(movie)
-        );
-        const movieListArray = await Promise.all(promiseArray);
-        
-            dispatch(
-                updateSearchResult({
-                    movieName: movieNameArray,
-                    movieList: movieListArray,
-                })
-            );
-        
+            const result = await gemini.generateContent(prompt);
+            const response = await result.response;
+            const text = response.text().trim();
+
+            const movieNameArray = text.split(",").map(name => name.trim()).filter(Boolean);
+            const promiseArray = movieNameArray.map((movie) => getMovieFromTMDB(movie));
+            const movieListArray = await Promise.all(promiseArray);
+
+            dispatch(updateSearchResult({
+                movieName: movieNameArray,
+                movieList: movieListArray,
+            }));
+        } catch (err) {
+            console.error("Gemini error:", err);
+            setError("Something went wrong while fetching recommendations.");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
         <div className="pt-20 flex justify-center items-center bg-darkBlue h-screen w-screen text-white">
-            <div className="flex flex-col-reverse items-center justify-start gap-8 p-2 overflow-hidden h-5/6 w-2/3">
+            <div className="flex flex-col-reverse items-center justify-start gap-8 p-2 overflow-hidden h-2/3 md:h-5/6 w-full md:w-2/3">
                 <form
                     onSubmit={(e) => e.preventDefault()}
                     className="flex justify-center gap-4 w-full"
@@ -62,19 +70,30 @@ const AiPage = () => {
                     <input
                         type="text"
                         ref={searchText}
-                        placeholder={lang[langKey].gptInputPlaceholder}
-                        className="bg-black py-2 px-4 rounded-lg w-1/2 "
+                        placeholder={lang[langKey]?.gptInputPlaceholder || "Type your query"}
+                        className="bg-black py-2 px-4 rounded-lg w-2/3 md:w-1/2 outline-none"
                     />
                     <button
-                        className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg"
+                        type="button"
+                        className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg disabled:opacity-50"
                         onClick={handleGeminiSearchClick}
+                        disabled={isLoading}
                     >
-                        <i className="fa-solid fa-paper-plane"></i>
+                        {isLoading ? "Searching..." : (
+                            <>
+                                {lang[langKey]?.gptSendBtn || "Send"}
+                            </>
+                        )}
                     </button>
                 </form>
+
+                {error && (
+                    <p className="text-red-500 text-sm w-full text-center">{error}</p>
+                )}
+
                 <div className="overflow-auto scrollbar-thin scrollbar-track-gray-600 scrollbar-thumb-gray-700 w-full">
                     <div className="p-4">
-                        {gptMovies &&
+                        {gptMovies?.length > 0 && searchResult?.length > 0 &&
                             gptMovies.map((movie, index) => (
                                 <MovieList
                                     key={index}

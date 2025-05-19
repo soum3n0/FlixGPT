@@ -21,7 +21,7 @@ const Login = () => {
     const email = useRef(null);
     const password = useRef(null);
     const dispatch = useDispatch();
-    const langKey = useSelector(store => store.config.lang);
+    const langKey = useSelector(store => store.userConfig.config.lang);
 
     const toggle = () => {
         setIsLogin(!isLogin);

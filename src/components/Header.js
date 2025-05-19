@@ -4,14 +4,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { auth } from '../utils/firebase';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { signOut, onAuthStateChanged } from "firebase/auth";
-import { addUser, removeUser } from '../utils/userSlice';
+import { addUser, removeUser, changeLanguage } from '../utils/userSlice';
 import { lang, languageList } from '../utils/langConstrants';
-import { changeLanguage } from '../utils/configSlice';
 import usePasswordChange from '../Hooks/usePasswordChange';
 
 const Header = () => {
-    const user = useSelector(store => store.user);
-    const language = useSelector(store => store.config);
+    const user = useSelector(store => store.userConfig.user);
+    const language = useSelector(store => store.userConfig.config);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [scrollY, setScrollY] = useState(0);
@@ -98,7 +97,7 @@ const Header = () => {
 
     return (
         <div>
-            <div className='px-8 sm:px-12 md:px-20 lg:px-20 bg-gradient-to-b from-black h-20 z-50 w-screen fixed flex justify-between items-center' style={{ backgroundColor }}>
+            <div className='px-6 sm:px-12 md:px-20 lg:px-20 bg-gradient-to-b from-black h-20 z-50 w-screen fixed flex justify-between items-center' style={{ backgroundColor }}>
                 <Link className='w-2/6 md:w-3/12 lg:w-1/6' to={user ? "/browse" : "/"}><img className=' contrast-125' src={logo} alt='logo' /></Link>
                 <div className='flex gap-4'>
                     {user && <div className='flex items-center relative'>

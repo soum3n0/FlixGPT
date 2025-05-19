@@ -1,17 +1,28 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const userSlice = createSlice({
-    name: "user",
-    initialState: {},
+    name: "userConfig",
+    initialState: {
+        user : null,
+        config : {
+            lang: "en",
+            langName: "English",
+        }
+    },
     reducers:{
         addUser: (state, action)=>{
-            return action.payload;
+            state.user = action.payload;
         },
         removeUser: (state, action)=>{
-            return null;
-        }
+            state.user = null;
+        },
+        changeLanguage: (state, action) =>{
+            const arr = action.payload.split(",");
+            state.config.lang = arr[0];
+            state.config.langName = arr[1];
+        },
     }
 })
 
-export const {addUser, removeUser} = userSlice.actions;
+export const {addUser, removeUser, changeLanguage} = userSlice.actions;
 export default userSlice.reducer;

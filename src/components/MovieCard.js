@@ -1,5 +1,6 @@
 import { POSTER_URL } from '../utils/constrants';
 import {Link} from "react-router-dom";
+import React from 'react';
 
 const MovieCard = ({ movie }) => {
     if (!movie) return;
@@ -13,4 +14,4 @@ const MovieCard = ({ movie }) => {
     )
 }
 
-export default MovieCard;
+export default React.memo(MovieCard);

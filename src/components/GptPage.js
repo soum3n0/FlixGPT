@@ -7,7 +7,7 @@ import { API_OPTION, GET_MOVIE_BY_NAME_API } from '../utils/constrants';
 import { updateSearchResult } from '../utils/gptSlice';
 
 const GptPage = () => {
-    const langKey = useSelector(store => store.config.lang);
+    const langKey = useSelector(store => store.userConfig.config.lang);
     const searchText = useRef(null);
     const dispatch = useDispatch();
 
@@ -19,7 +19,7 @@ const GptPage = () => {
     }
 
     // const handleGptSearchClick = async () => {
-    //     //Make API call to GPT API 
+    //     //Make API call to GPT API
     //     const gptQuery = "Act as a  Movie Recommendation system and suggest some movies for the query " + searchText.current.value + ". Only give me name of 3 movies, comma seperated like the example result given ahead. Example result : Movie Name 1, Movie Name 2, Move Name 3";
     //     const chatCompletion = await openai.chat.completions.create({
     //         messages: [{ role: 'user', content: searchText.current.value }],
@@ -39,7 +39,7 @@ const GptPage = () => {
         const result = await gemini.generateContent(prompt);
         const response = await result.response;
         const text = response.text();
-        
+
         const movieNameArray = text.split(", ");
         const promiseArray = movieNameArray.map( movie => getMovieFromTMDB(movie) );
         const movieListArray = await Promise.all(promiseArray);
