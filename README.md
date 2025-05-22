@@ -1,6 +1,6 @@
 # 🎬 FlixGPT
 
-**FlixGPT** is an AI-powered movie discovery web app built using **React**, **Redux**, **Firebase**, and the **TMDB API**, with Gemini AI integration for smart movie suggestions based on user intent.
+**FlixGPT** is an AI-powered movie discovery web app built using **React**, **Redux**, **Firebase**, and the **TMDB API**, with **Gemini AI** integration for smart movie suggestions based on user intent.
 
 ---
 
@@ -65,8 +65,8 @@
 │   ├── appStore.js
 │   ├── constrants.js
 │   ├── firebase.js
-│   ├── gemini.js
 │   ├── formValidation.js
+│   ├── gemini.js
 │   ├── gptSlice.js
 │   ├── langConstraints.js
 │   ├── moviesSlice.js
@@ -79,7 +79,7 @@
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/flixgpt.git
+   git clone https://github.com/soum3n0/FlixGPT.git
    cd flixgpt
    ```
 
@@ -91,8 +91,9 @@
 3. **Add environment variables**  
    Create a `.env` file in the root and add your TMDB and Gemini API keys:
    ```ini
-   REACT_APP_TMDB_API_KEY=your_tmdb_key
    REACT_APP_GEMINI_API_KEY=your_gemini_key
+   REACT_APP_TMDB_API_OPTION=your_tmdb_option
+   REACT_APP_FIREBASE_API_KEY=your_firebase_key
    ```
 
 4. **Start the development server**
@@ -121,11 +122,14 @@ firebase deploy
 ## ✨ Future Improvements
 
 - Add user-specific **watchlists** using Firestore
+- Add user-specific **favorite** using Firestore
 - Add **debounced live search** suggestions
 - Convert to **PWA** for offline support
+- Add skeleton instead of using only spinner for better UX
+- Push notification for new released movies
 - Add **unit tests** with Jest & React Testing Library
 - Migrate to **Next.js for SSR and SEO**
 
 ---
 
-> Built with 💡 and 🎬 by Soumen Dey
+> Built with ❤️ by Soumen Dey
